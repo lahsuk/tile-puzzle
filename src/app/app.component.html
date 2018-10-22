@@ -1,20 +1,35 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<mat-toolbar>Tile Puzzle</mat-toolbar>
 
+<div class="container">
+	<div class="row">
+
+    <div class="col-md-1"></div>
+    <div class="col-md-6">
+
+      <mat-grid-list [cols]="this.size">
+        <mat-grid-tile *ngFor="let tile of gs.board.tiles; let i = index; trackBy: trackByFn" (click)="playerClick(i)">
+          <img [src]="getImagePath(i)" class="img-fluid">
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <img class="card-img-top" [src]="getOriginalImagePath()" alt="Original Image">
+        <div class="card-body">
+          <h5 class="card-title">Original Image</h5>
+          <p class="card-text">Click on the adjacent tiles of the blank tiles to swap the image. Try to complete the image!</p>
+          <a href="#" class="btn btn-primary col-md-6" (click)="newGame($event)">New Gmae</a>
+          <a href="#" class="btn btn-secondary col-md-6" (click)="changePuzzle($event)">Change Puzzle</a>
+          <div class="btn-group" role="group" aria-label="Basic example">
+              <button type="button" class="btn btn-secondary" (click)="changeDifficulty('easy')">Easy</button>
+              <button type="button" class="btn btn-secondary" (click)="changeDifficulty('medium')">Medium</button>
+              <button type="button" class="btn btn-secondary" (click)="changeDifficulty('hard')">Hard</button>
+            </div>
+          <p class="card-text"><small class="text-muted">Moves: {{ this.moves }}</small></p>
+        </div>
+      </div>
+    </div>
+
+	</div>
+</div>
