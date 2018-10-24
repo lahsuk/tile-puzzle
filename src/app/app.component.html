@@ -19,8 +19,8 @@
         <div class="card-body">
           <h5 class="card-title">Original Image</h5>
           <p class="card-text">Click on the adjacent tiles of the blank tiles to swap the image. Try to complete the image!</p>
-          <a href="#" class="btn btn-primary col-md-6" (click)="newGame()">New Gmae</a>
-          <a href="#" class="btn btn-secondary col-md-6" (click)="changePuzzle()">Change Puzzle</a>
+          <button type="button" class="btn btn-primary" (click)="newGame()">New Game</button>
+          <button type="button" class="btn btn-secondary" (click)="changePuzzle()">Change Puzzle</button>
           <div class="btn-group" role="group" aria-label="Basic example">
               <button type="button" class="btn btn-secondary" (click)="changeDifficulty('easy')">Easy</button>
               <button type="button" class="btn btn-secondary" (click)="changeDifficulty('medium')">Medium</button>

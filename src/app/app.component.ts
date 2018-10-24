@@ -43,7 +43,7 @@ export class AppComponent {
 
   playerClick(i) {
     if (!this.gs.board.tiles[i].swappable) {
-      this.snackBar.open("You can onlyl swap adjacent tiles to the empty tiles.", "Oh, OK.", {duration: 2500,});
+      this.snackBar.open("You can only swap adjacent tiles to the empty tile.", "Oh, OK.", {duration: 2500,});
       return;
     }
 
@@ -51,7 +51,6 @@ export class AppComponent {
 
     console.log(i);
     let zeroIndex = this.gs.getZeroTileIndex();
-    // swap values
     this.gs.swapValue(zeroIndex, i);
 
     this.gs.updateTiles();
@@ -69,12 +68,12 @@ export class AppComponent {
   }
 
   getImagePath(i) {
-    return "../assets/tiles/" + this.puzzles[this.puzzle] + "/" + this.difficulties[this.difficulty] + "/"
+    return "./assets/tiles/" + this.puzzles[this.puzzle] + "/" + this.difficulties[this.difficulty] + "/"
       + this.gs.board.tiles[i].value + ".jpg";
   }
 
   getOriginalImagePath() {
-    return "../assets/tiles/" + this.puzzles[this.puzzle] + "/original.jpg";
+    return "./assets/tiles/" + this.puzzles[this.puzzle] + "/original.jpg";
   }
 
   changeDifficulty(level: string) {
@@ -86,6 +85,7 @@ export class AppComponent {
   }
 
   changePuzzle() {
+    console.log("puzzle changed.")
     this.puzzle = (this.puzzle + 1) % this.puzzles.length;
     this.newGame();
   }
