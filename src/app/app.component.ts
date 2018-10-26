@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnChanges, DoCheck } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GameService } from './game.service'
+import { Bot } from './bot';
 
 @Component({
     selector: 'app-root',
@@ -19,6 +20,7 @@ export class AppComponent {
     ];
     puzzle: number;
     puzzles: string[];
+    botPlaying: boolean;
 
     constructor(public gs: GameService, public snackBar: MatSnackBar) {
         this.moves = 0;
@@ -35,14 +37,21 @@ export class AppComponent {
             "canyon",
         ]
         this.size = this.difficulty_sizes[this.difficulty];
+        this.botPlaying = false;
         gs.newBoard(this.size);
     }
 
     playerClick(i) {
+        if (this.botPlaying) return;
+        this.click(i);
+    }
+
+    click(i) {
         if (!this.gs.board.tiles[i].swappable) {
             this.snackBar.open("You can only swap adjacent tiles to the empty tile.", "Oh, OK.", {duration: 2500,});
             return;
         }
+        console.log(i);
 
         this.moves += 1;
 
@@ -53,6 +62,66 @@ export class AppComponent {
         if (completed) {
             this.snackBar.open("Game Complete!", "OK", {duration: 4000,});
         }
+    }
+
+    sleepFor (sleepDuration: number){
+        var now = new Date().getTime();
+        while(new Date().getTime() < now + sleepDuration){ /* do nothing */ }
+    }
+
+    botPlay() {
+        this.botPlaying = true;
+        let bot = new Bot();
+        let moves = bot.getSolveSequnce(this.gs.board);
+        console.log("move sequence: ", moves);
+        for (let i = 0; i < moves.length; ++i) {
+            let movePos = -1;
+            let zeroIndex = this.gs.board.getZeroTileIndex();
+            if (moves[i].up) {
+                movePos = zeroIndex - this.gs.board.size;
+            }
+            if (moves[i].down) {
+                movePos = zeroIndex + this.gs.board.size;
+            }
+            if (moves[i].right) {
+                movePos = zeroIndex + 1;
+            }
+            if (moves[i].left) {
+                movePos = zeroIndex - 1;
+            }
+
+            console.log("move pos: " + movePos);
+            this.sleepFor(500);
+            this.click(movePos);
+
+            // TODO: make angular refresh the template statement forcefully
+            // this.sleepFor(500);
+        }
+        this.botPlaying = false;
+        console.log("Game completed by bot!");
+    }
+
+    singleMove(moves) {
+        let move = moves.pop();
+        let movePos = -1;
+        let zeroIndex = this.gs.board.getZeroTileIndex();
+        if (move.up) {
+            movePos = zeroIndex - this.gs.board.size;
+        }
+        if (move.down) {
+            movePos = zeroIndex + this.gs.board.size;
+        }
+        if (move.right) {
+            movePos = zeroIndex + 1;
+        }
+        if (move.left) {
+            movePos = zeroIndex - 1;
+        }
+        this.click(movePos);
+    }
+
+    playerPlay() {
+        this.botPlaying = false;
     }
 
     newGame() {

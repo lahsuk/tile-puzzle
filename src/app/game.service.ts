@@ -10,19 +10,18 @@ export class GameService {
 
     constructor() {
         this.board = new Board(4);
+        this.board.randomize();
         this.size = this.board.size;
     }
 
     newBoard(size: number) {
         this.board = new Board(size);
+        this.board.randomize();
         this.size = size;
+        console.log(this.board.state);
     }
 
     gameCompleted() {
-        for (let i = 0; i < this.size * this.size; ++i) {
-            if (this.board.tiles[i].value != i.toString())
-            return false;
-        }
-        return true;
+        return this.board.is_complete();
     }
 }

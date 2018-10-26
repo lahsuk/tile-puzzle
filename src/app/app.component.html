@@ -3,33 +3,35 @@
 <div class="container">
 	<div class="row">
 
-    <div class="col-md-1"></div>
-    <div class="col-md-6">
+        <div class="col-md-1"></div>
+        <div class="col-md-6">
 
-      <mat-grid-list [cols]="this.size">
-        <mat-grid-tile *ngFor="let tile of gs.board.tiles; let i = index;" (click)="playerClick(i)">
-          <img [src]="getImagePath(i)" class="img-fluid">
-        </mat-grid-tile>
-      </mat-grid-list>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card">
-        <img class="card-img-top" [src]="getOriginalImagePath()" alt="Original Image">
-        <div class="card-body">
-          <h5 class="card-title">Original Image</h5>
-          <p class="card-text">Click on the adjacent tiles of the blank tiles to swap the image. Try to complete the image!</p>
-          <button type="button" class="btn btn-primary" (click)="newGame()">New Game</button>
-          <button type="button" class="btn btn-secondary" (click)="changePuzzle()">Change Puzzle</button>
-          <div class="btn-group" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-secondary" (click)="changeDifficulty('easy')">Easy</button>
-              <button type="button" class="btn btn-secondary" (click)="changeDifficulty('medium')">Medium</button>
-              <button type="button" class="btn btn-secondary" (click)="changeDifficulty('hard')">Hard</button>
-            </div>
-          <p class="card-text"><small class="text-muted">Moves: {{ this.moves }}</small></p>
+            <mat-grid-list [cols]="this.size">
+                <mat-grid-tile *ngFor="let tile of gs.board.tiles; let i = index;" (click)="playerClick(i)">
+                    <img [src]="getImagePath(i)" [id]="i" class="img-fluid">
+                </mat-grid-tile>
+            </mat-grid-list>
         </div>
-      </div>
-    </div>
+
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary" (click)="botPlay()">Bot Play</button>
+            <button type="button" class="btn btn-primary" (click)="playerPlay()">Player Play</button>
+            <div class="card">
+                <img class="card-img-top" [src]="getOriginalImagePath()" alt="Original Image">
+                <div class="card-body">
+                    <h5 class="card-title">Original Image</h5>
+                    <p class="card-text">Click on the adjacent tiles of the blank tiles to swap the image. Try to complete the image!</p>
+                    <button type="button" class="btn btn-primary" (click)="newGame()">New Game</button>
+                    <button type="button" class="btn btn-secondary" (click)="changePuzzle()">Change Puzzle</button>
+                    <div class="btn-group" role="group" aria-label="Difficulty Levels">
+                        <button type="button" class="btn btn-secondary" (click)="changeDifficulty('easy')">Easy</button>
+                        <button type="button" class="btn btn-secondary" (click)="changeDifficulty('medium')">Medium</button>
+                        <button type="button" class="btn btn-secondary" (click)="changeDifficulty('hard')">Hard</button>
+                    </div>
+                    <p class="card-text"><small class="text-muted">Moves: {{ this.moves }}</small></p>
+                </div>
+            </div>
+        </div>
 
 	</div>
 </div>

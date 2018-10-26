@@ -7,15 +7,23 @@ export class Board {
     state: string;
     moves: Moves;
 
-    constructor(size: number = 3) {
+    constructor(size: number = 3, state: string = "") {
         this.size = size;
-        for (let i = 0; i < size * size; ++i) {
-            let tile = new Tile();
-            tile.setValue(i.toString());
-
-            this.tiles.push(tile);
+        if (state.length != 0) {
+            let values = state.split(',');
+            for (let i = 0; i < values.length; ++i) {
+                let tile = new Tile();
+                tile.setValue(values[i]);
+                this.tiles.push(tile);
+            }
+        } else {
+            for (let i = 0; i < size * size; ++i) {
+                let tile = new Tile();
+                tile.setValue(i.toString());
+                this.tiles.push(tile);
+            }
         }
-        this.randomize();
+
         this.update();
         // console.log("Solvable: " + this.is_solvable());
         // console.log(this.getState());
@@ -33,6 +41,8 @@ export class Board {
     }
 
     update() {
+        // console.log(new Bot().getManhattenDistance(this));
+
         this.setState();
         let size = this.size;
         let i = this.getZeroTileIndex();
@@ -72,6 +82,14 @@ export class Board {
             return !(inversions & 1);
         else
             return Boolean(inversions & 1);
+    }
+
+    is_complete(): boolean {
+        for (let i = 0; i < this.size * this.size; ++i) {
+            if (this.tiles[i].value != i.toString())
+            return false;
+        }
+        return true;
     }
 
     swapValue(i, j) {
@@ -138,4 +156,14 @@ export class Board {
     getState() {
         return this.state;
     }
+
+    printBoard() {
+        let s: string = "";
+        for (let i = 0; i < this.size * this.size ; ++i) {
+            s += this.tiles[i].value;
+            s += ((i+1) % this.size == 0) ? "\n": " | ";
+        }
+        console.log(s);
+    }
+
 }
