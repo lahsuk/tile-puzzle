@@ -1,4 +1,4 @@
-import { Component, OnChanges, DoCheck } from '@angular/core';
+import { Component, OnChanges, DoCheck, ChangeDetectorRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GameService } from './game.service'
 import { Bot } from './bot';
@@ -22,7 +22,7 @@ export class AppComponent {
     puzzles: string[];
     botPlaying: boolean;
 
-    constructor(public gs: GameService, public snackBar: MatSnackBar) {
+    constructor(public gs: GameService, public snackBar: MatSnackBar, private ref: ChangeDetectorRef) {
         this.moves = 0;
         this.difficulty = 0;
         this.difficulties = [
@@ -46,78 +46,70 @@ export class AppComponent {
         this.click(i);
     }
 
-    click(i) {
-        if (!this.gs.board.tiles[i].swappable) {
-            this.snackBar.open("You can only swap adjacent tiles to the empty tile.", "Oh, OK.", {duration: 2500,});
+    click(i, self = this) {
+        if (!self.gs.board.tiles[i].swappable) {
+            self.snackBar.open("You can only swap adjacent tiles to the empty tile.", "Oh, OK.", {duration: 2500,});
             return;
         }
         console.log(i);
 
-        this.moves += 1;
+        self.moves += 1;
 
-        let zeroIndex = this.gs.board.getZeroTileIndex();
-        this.gs.board.swapValue(zeroIndex, i);
+        let zeroIndex = self.gs.board.getZeroTileIndex();
+        self.gs.board.swapValue(zeroIndex, i);
 
-        let completed = this.gs.gameCompleted();
+        self.gs.board.printBoard();
+
+        let completed = self.gs.gameCompleted();
         if (completed) {
-            this.snackBar.open("Game Complete!", "OK", {duration: 4000,});
+            self.snackBar.open("Game Complete!", "OK", {duration: 4000,});
         }
-    }
-
-    sleepFor (sleepDuration: number){
-        var now = new Date().getTime();
-        while(new Date().getTime() < now + sleepDuration){ /* do nothing */ }
     }
 
     botPlay() {
         this.botPlaying = true;
         let bot = new Bot();
         let moves = bot.getSolveSequnce(this.gs.board);
-        console.log("move sequence: ", moves);
-        for (let i = 0; i < moves.length; ++i) {
-            let movePos = -1;
-            let zeroIndex = this.gs.board.getZeroTileIndex();
-            if (moves[i].up) {
-                movePos = zeroIndex - this.gs.board.size;
-            }
-            if (moves[i].down) {
-                movePos = zeroIndex + this.gs.board.size;
-            }
-            if (moves[i].right) {
-                movePos = zeroIndex + 1;
-            }
-            if (moves[i].left) {
-                movePos = zeroIndex - 1;
-            }
+        console.log("move sequence: ");
+        console.log(moves);
 
-            console.log("move pos: " + movePos);
-            this.sleepFor(500);
-            this.click(movePos);
+        this.singleMove(0, moves);
 
-            // TODO: make angular refresh the template statement forcefully
-            // this.sleepFor(500);
-        }
         this.botPlaying = false;
         console.log("Game completed by bot!");
     }
 
-    singleMove(moves) {
-        let move = moves.pop();
+    singleMove(i, moves, self=this) {
+        console.log("length: " + moves.length);
+        console.log("i: " + i);
+        console.log(moves);
+
+        let move = moves[i];
+        console.log(move);
         let movePos = -1;
-        let zeroIndex = this.gs.board.getZeroTileIndex();
+        let zeroIndex = self.gs.board.getZeroTileIndex();
         if (move.up) {
-            movePos = zeroIndex - this.gs.board.size;
+            console.log("up");
+            movePos = zeroIndex - self.gs.board.size;
         }
         if (move.down) {
-            movePos = zeroIndex + this.gs.board.size;
+            console.log("down");
+            movePos = zeroIndex + self.gs.board.size;
         }
         if (move.right) {
+            console.log("right");
             movePos = zeroIndex + 1;
         }
         if (move.left) {
+            console.log("left");
             movePos = zeroIndex - 1;
         }
-        this.click(movePos);
+        self.click(movePos, self);
+
+        if ( i != (moves.length-1) ) {
+            // console.log("Scheduled " + i + "th move.");
+            setTimeout(self.singleMove, 200, i+1, moves, self);
+        }
     }
 
     playerPlay() {
