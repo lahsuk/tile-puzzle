@@ -63,6 +63,7 @@ export class AppComponent {
         let completed = self.gs.gameCompleted();
         if (completed) {
             self.snackBar.open("Game Complete!", "OK", {duration: 4000,});
+            this.botPlaying = false;
         }
     }
 
@@ -75,7 +76,6 @@ export class AppComponent {
 
         this.singleMove(0, moves);
 
-        this.botPlaying = false;
         console.log("Game completed by bot!");
     }
 
