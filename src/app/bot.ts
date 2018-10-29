@@ -16,9 +16,11 @@ export class Bot {
     }
 
     getSolveSequnce(board: Board) {
+        if (board.is_complete()) return;
         let goal = this.ast(board);
         if (!goal) {
-            console.log("Not complete!");
+            console.log("Game not solved by bot!");
+            return;
         }
         let moves = this.getMovementDirection(goal);
         return moves;

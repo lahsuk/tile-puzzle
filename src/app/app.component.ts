@@ -71,6 +71,10 @@ export class AppComponent {
         this.botPlaying = true;
         let bot = new Bot();
         let moves = bot.getSolveSequnce(this.gs.board);
+        if (!moves) {
+            this.botPlaying = false;
+            return;
+        }
         console.log("move sequence: ");
         console.log(moves);
 
